@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { useAuth, logout, useStore } from "@/lib/store";
 
-const nav = [
+const nav: { to: string; exact?: boolean; label: string; icon: typeof LayoutDashboard }[] = [
   { to: "/admin", exact: true, label: "Dashboard", icon: LayoutDashboard },
   { to: "/admin/settings", label: "Site Settings", icon: SettingsIcon },
   { to: "/admin/events", label: "Ghana Day Event", icon: Calendar },
@@ -18,7 +18,7 @@ const nav = [
   { to: "/admin/countries", label: "World Map", icon: Globe },
   { to: "/admin/affiliations", label: "About & Affiliations", icon: Newspaper },
   { to: "/admin/submissions", label: "Inbox", icon: Inbox },
-] as const;
+];
 
 export function AdminShell({ children, title }: { children: React.ReactNode; title: string }) {
   const auth = useAuth();

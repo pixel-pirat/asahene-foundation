@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminGalleryRouteImport } from './routes/admin.gallery'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminEnsembleRouteImport } from './routes/admin.ensemble'
 import { Route as AdminAwardsRouteImport } from './routes/admin.awards'
@@ -85,6 +86,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGalleryRoute = AdminGalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminEventsRoute = AdminEventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/admin/awards': typeof AdminAwardsRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
+  '/admin/gallery': typeof AdminGalleryRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/': typeof AdminIndexRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/admin/awards': typeof AdminAwardsRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
+  '/admin/gallery': typeof AdminGalleryRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin': typeof AdminIndexRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/admin/awards': typeof AdminAwardsRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
+  '/admin/gallery': typeof AdminGalleryRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/': typeof AdminIndexRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/admin/awards'
     | '/admin/ensemble'
     | '/admin/events'
+    | '/admin/gallery'
     | '/admin/login'
     | '/admin/settings'
     | '/admin/'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/admin/awards'
     | '/admin/ensemble'
     | '/admin/events'
+    | '/admin/gallery'
     | '/admin/login'
     | '/admin/settings'
     | '/admin'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/admin/awards'
     | '/admin/ensemble'
     | '/admin/events'
+    | '/admin/gallery'
     | '/admin/login'
     | '/admin/settings'
     | '/admin/'
@@ -303,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/gallery': {
+      id: '/admin/gallery'
+      path: '/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AdminGalleryRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/events': {
       id: '/admin/events'
       path: '/events'
@@ -331,6 +350,7 @@ interface AdminRouteChildren {
   AdminAwardsRoute: typeof AdminAwardsRoute
   AdminEnsembleRoute: typeof AdminEnsembleRoute
   AdminEventsRoute: typeof AdminEventsRoute
+  AdminGalleryRoute: typeof AdminGalleryRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -340,6 +360,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAwardsRoute: AdminAwardsRoute,
   AdminEnsembleRoute: AdminEnsembleRoute,
   AdminEventsRoute: AdminEventsRoute,
+  AdminGalleryRoute: AdminGalleryRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminIndexRoute: AdminIndexRoute,

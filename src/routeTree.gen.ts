@@ -19,6 +19,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminSubmissionsRouteImport } from './routes/admin.submissions'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminPressKitRouteImport } from './routes/admin.press-kit'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
@@ -28,6 +29,7 @@ import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminEnsembleRouteImport } from './routes/admin.ensemble'
 import { Route as AdminCountriesRouteImport } from './routes/admin.countries'
 import { Route as AdminAwardsRouteImport } from './routes/admin.awards'
+import { Route as AdminAffiliationsRouteImport } from './routes/admin.affiliations'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -79,6 +81,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSubmissionsRoute = AdminSubmissionsRouteImport.update({
+  id: '/submissions',
+  path: '/submissions',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -124,6 +131,11 @@ const AdminAwardsRoute = AdminAwardsRouteImport.update({
   path: '/awards',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAffiliationsRoute = AdminAffiliationsRouteImport.update({
+  id: '/affiliations',
+  path: '/affiliations',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -135,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/ghana-day': typeof GhanaDayRoute
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
+  '/admin/affiliations': typeof AdminAffiliationsRoute
   '/admin/awards': typeof AdminAwardsRoute
   '/admin/countries': typeof AdminCountriesRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
@@ -144,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AdminMediaRoute
   '/admin/press-kit': typeof AdminPressKitRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -155,6 +169,7 @@ export interface FileRoutesByTo {
   '/ghana-day': typeof GhanaDayRoute
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
+  '/admin/affiliations': typeof AdminAffiliationsRoute
   '/admin/awards': typeof AdminAwardsRoute
   '/admin/countries': typeof AdminCountriesRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
@@ -164,6 +179,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AdminMediaRoute
   '/admin/press-kit': typeof AdminPressKitRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -177,6 +193,7 @@ export interface FileRoutesById {
   '/ghana-day': typeof GhanaDayRoute
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
+  '/admin/affiliations': typeof AdminAffiliationsRoute
   '/admin/awards': typeof AdminAwardsRoute
   '/admin/countries': typeof AdminCountriesRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
@@ -186,6 +203,7 @@ export interface FileRoutesById {
   '/admin/media': typeof AdminMediaRoute
   '/admin/press-kit': typeof AdminPressKitRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/submissions': typeof AdminSubmissionsRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -200,6 +218,7 @@ export interface FileRouteTypes {
     | '/ghana-day'
     | '/media'
     | '/support'
+    | '/admin/affiliations'
     | '/admin/awards'
     | '/admin/countries'
     | '/admin/ensemble'
@@ -209,6 +228,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/press-kit'
     | '/admin/settings'
+    | '/admin/submissions'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -220,6 +240,7 @@ export interface FileRouteTypes {
     | '/ghana-day'
     | '/media'
     | '/support'
+    | '/admin/affiliations'
     | '/admin/awards'
     | '/admin/countries'
     | '/admin/ensemble'
@@ -229,6 +250,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/press-kit'
     | '/admin/settings'
+    | '/admin/submissions'
     | '/admin'
   id:
     | '__root__'
@@ -241,6 +263,7 @@ export interface FileRouteTypes {
     | '/ghana-day'
     | '/media'
     | '/support'
+    | '/admin/affiliations'
     | '/admin/awards'
     | '/admin/countries'
     | '/admin/ensemble'
@@ -250,6 +273,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/press-kit'
     | '/admin/settings'
+    | '/admin/submissions'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -337,6 +361,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/submissions': {
+      id: '/admin/submissions'
+      path: '/submissions'
+      fullPath: '/admin/submissions'
+      preLoaderRoute: typeof AdminSubmissionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -400,10 +431,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAwardsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/affiliations': {
+      id: '/admin/affiliations'
+      path: '/affiliations'
+      fullPath: '/admin/affiliations'
+      preLoaderRoute: typeof AdminAffiliationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAffiliationsRoute: typeof AdminAffiliationsRoute
   AdminAwardsRoute: typeof AdminAwardsRoute
   AdminCountriesRoute: typeof AdminCountriesRoute
   AdminEnsembleRoute: typeof AdminEnsembleRoute
@@ -413,10 +452,12 @@ interface AdminRouteChildren {
   AdminMediaRoute: typeof AdminMediaRoute
   AdminPressKitRoute: typeof AdminPressKitRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSubmissionsRoute: typeof AdminSubmissionsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAffiliationsRoute: AdminAffiliationsRoute,
   AdminAwardsRoute: AdminAwardsRoute,
   AdminCountriesRoute: AdminCountriesRoute,
   AdminEnsembleRoute: AdminEnsembleRoute,
@@ -426,6 +467,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMediaRoute: AdminMediaRoute,
   AdminPressKitRoute: AdminPressKitRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  AdminSubmissionsRoute: AdminSubmissionsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -445,3 +487,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

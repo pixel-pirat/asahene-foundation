@@ -26,6 +26,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminGalleryRouteImport } from './routes/admin.gallery'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminEnsembleRouteImport } from './routes/admin.ensemble'
+import { Route as AdminCountriesRouteImport } from './routes/admin.countries'
 import { Route as AdminAwardsRouteImport } from './routes/admin.awards'
 
 const SupportRoute = SupportRouteImport.update({
@@ -113,6 +114,11 @@ const AdminEnsembleRoute = AdminEnsembleRouteImport.update({
   path: '/ensemble',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCountriesRoute = AdminCountriesRouteImport.update({
+  id: '/countries',
+  path: '/countries',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAwardsRoute = AdminAwardsRouteImport.update({
   id: '/awards',
   path: '/awards',
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
   '/admin/awards': typeof AdminAwardsRoute
+  '/admin/countries': typeof AdminCountriesRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/gallery': typeof AdminGalleryRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
   '/admin/awards': typeof AdminAwardsRoute
+  '/admin/countries': typeof AdminCountriesRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/gallery': typeof AdminGalleryRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
   '/admin/awards': typeof AdminAwardsRoute
+  '/admin/countries': typeof AdminCountriesRoute
   '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/gallery': typeof AdminGalleryRoute
@@ -192,6 +201,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/support'
     | '/admin/awards'
+    | '/admin/countries'
     | '/admin/ensemble'
     | '/admin/events'
     | '/admin/gallery'
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/support'
     | '/admin/awards'
+    | '/admin/countries'
     | '/admin/ensemble'
     | '/admin/events'
     | '/admin/gallery'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/support'
     | '/admin/awards'
+    | '/admin/countries'
     | '/admin/ensemble'
     | '/admin/events'
     | '/admin/gallery'
@@ -374,6 +386,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEnsembleRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/countries': {
+      id: '/admin/countries'
+      path: '/countries'
+      fullPath: '/admin/countries'
+      preLoaderRoute: typeof AdminCountriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/awards': {
       id: '/admin/awards'
       path: '/awards'
@@ -386,6 +405,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAwardsRoute: typeof AdminAwardsRoute
+  AdminCountriesRoute: typeof AdminCountriesRoute
   AdminEnsembleRoute: typeof AdminEnsembleRoute
   AdminEventsRoute: typeof AdminEventsRoute
   AdminGalleryRoute: typeof AdminGalleryRoute
@@ -398,6 +418,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAwardsRoute: AdminAwardsRoute,
+  AdminCountriesRoute: AdminCountriesRoute,
   AdminEnsembleRoute: AdminEnsembleRoute,
   AdminEventsRoute: AdminEventsRoute,
   AdminGalleryRoute: AdminGalleryRoute,

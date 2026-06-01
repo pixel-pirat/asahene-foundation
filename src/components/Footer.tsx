@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Youtube, Mail } from "lucide-react";
+import { Facebook, Youtube, Mail, Lock } from "lucide-react";
+import { useStore } from "@/lib/store";
 
 export function Footer() {
+  const contact = useStore((d) => d.settings.contact);
   return (
     <footer className="mt-24 bg-secondary text-secondary-foreground">
       <div className="kente-stripe h-1.5 w-full" />
@@ -42,13 +44,13 @@ export function Footer() {
             <li><Link to="/support" className="hover:text-primary">Volunteer</Link></li>
           </ul>
           <div className="mt-4 flex items-center gap-3">
-            <a href="https://www.facebook.com/Anamereconcepts" target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-9 w-9 place-items-center rounded-full bg-secondary-foreground/10 hover:bg-primary hover:text-primary-foreground transition">
+            <a href={contact.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-9 w-9 place-items-center rounded-full bg-secondary-foreground/10 hover:bg-primary hover:text-primary-foreground transition">
               <Facebook className="h-4 w-4" />
             </a>
-            <a href="https://www.youtube.com/playlist?list=PLJAPanOB1rkGzTeBMRBvmVseDqujYJFP1" target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-9 w-9 place-items-center rounded-full bg-secondary-foreground/10 hover:bg-primary hover:text-primary-foreground transition">
+            <a href={contact.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-9 w-9 place-items-center rounded-full bg-secondary-foreground/10 hover:bg-primary hover:text-primary-foreground transition">
               <Youtube className="h-4 w-4" />
             </a>
-            <a href="mailto:info@asahenefoundation.org" aria-label="Email" className="grid h-9 w-9 place-items-center rounded-full bg-secondary-foreground/10 hover:bg-primary hover:text-primary-foreground transition">
+            <a href={`mailto:${contact.email}`} aria-label="Email" className="grid h-9 w-9 place-items-center rounded-full bg-secondary-foreground/10 hover:bg-primary hover:text-primary-foreground transition">
               <Mail className="h-4 w-4" />
             </a>
           </div>
@@ -57,7 +59,9 @@ export function Footer() {
       <div className="border-t border-secondary-foreground/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-secondary-foreground/60 sm:flex-row sm:px-6">
           <p>© {new Date().getFullYear()} Asahene Foundation. All rights reserved.</p>
-          <p>Director: Lawrence Quaye</p>
+          <Link to="/admin" className="flex items-center gap-1.5 hover:text-primary">
+            <Lock className="h-3 w-3" /> Admin
+          </Link>
         </div>
       </div>
     </footer>

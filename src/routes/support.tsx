@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { Heart, Handshake, Users } from "lucide-react";
+import { useStore, addSubmission, type SubmissionKind } from "@/lib/store";
 
 export const Route = createFileRoute("/support")({
   head: () => ({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/support")({
 });
 
 function SupportPage() {
+  const support = useStore((d) => d.settings.support);
   return (
     <>
       <PageHeader
@@ -41,9 +43,9 @@ function SupportPage() {
       <section className="bg-secondary text-secondary-foreground">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
           <h2 className="font-display text-2xl font-bold">Donate</h2>
-          <p className="mt-2 text-secondary-foreground/75">Choose an amount that's meaningful to you.</p>
+          <p className="mt-2 text-secondary-foreground/75">{support.donateHeading}</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-4">
-            {[25, 50, 100, 250].map((a) => (
+            {support.donateAmounts.map((a) => (
               <button key={a} className="rounded-xl border border-primary/30 bg-secondary/40 px-4 py-6 text-center font-display text-2xl font-bold text-primary transition hover:bg-primary hover:text-primary-foreground">
                 ${a}
               </button>
@@ -57,6 +59,7 @@ function SupportPage() {
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-2">
         <FormCard
+          kind="volunteer"
           title="Volunteer with us"
           fields={[
             { name: "name", label: "Full name", required: true },
@@ -67,6 +70,7 @@ function SupportPage() {
           cta="Submit application"
         />
         <FormCard
+          kind="partner"
           title="Partner inquiry"
           fields={[
             { name: "org", label: "Organization", required: true },
@@ -82,11 +86,12 @@ function SupportPage() {
 }
 
 function FormCard({
-  title, fields, cta,
+  title, fields, cta, kind,
 }: {
   title: string;
   fields: { name: string; label: string; type?: string; required?: boolean }[];
   cta: string;
+  kind: SubmissionKind;
 }) {
   const [done, setDone] = useState(false);
   return (
@@ -95,7 +100,17 @@ function FormCard({
       {done ? (
         <p className="mt-6 rounded-xl border border-primary/30 bg-primary/10 p-5 text-center font-medium">Medaase! We'll be in touch soon.</p>
       ) : (
-        <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} className="mt-5 space-y-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            const data: Record<string, string> = {};
+            fd.forEach((v, k) => (data[k] = String(v)));
+            addSubmission(kind, data);
+            setDone(true);
+          }}
+          className="mt-5 space-y-4"
+        >
           {fields.map((f) => (
             <label key={f.name} className="block">
               <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">{f.label}</span>

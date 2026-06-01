@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Download, Newspaper } from "lucide-react";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/media")({
   head: () => ({
@@ -13,6 +14,10 @@ export const Route = createFileRoute("/media")({
 });
 
 function MediaPage() {
+  const videos = useStore((d) => d.videos);
+  const press = useStore((d) => d.press);
+  const pressKit = useStore((d) => d.pressKit);
+  const pressKitNote = useStore((d) => d.settings.pressKitNote);
   return (
     <>
       <PageHeader
@@ -23,53 +28,71 @@ function MediaPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <h2 className="font-display text-2xl font-bold">Video Gallery</h2>
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="aspect-video overflow-hidden rounded-xl border border-border">
-            <iframe
-              title="Asahene playlist"
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/videoseries?list=PLJAPanOB1rkGzTeBMRBvmVseDqujYJFP1"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+        {videos.length === 0 ? (
+          <p className="mt-6 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">No videos added yet.</p>
+        ) : (
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            {videos.map((v) => (
+              <div key={v.id} className="aspect-video overflow-hidden rounded-xl border border-border">
+                <iframe
+                  title={v.title}
+                  className="h-full w-full"
+                  src={v.embedUrl}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ))}
           </div>
-          <div className="flex aspect-video flex-col items-center justify-center rounded-xl border-2 border-dashed border-primary/30 bg-card p-6 text-center">
-            <p className="font-display text-lg font-semibold">Facebook video gallery</p>
-            <p className="mt-2 text-sm text-muted-foreground">Embed coming soon.</p>
-            <a
-              href="https://www.facebook.com/Anamereconcepts/media_set?set=vb.1496125267&type=2"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
-            >
-              Open on Facebook
-            </a>
-          </div>
-        </div>
+        )}
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
         <h2 className="font-display text-2xl font-bold">Press Mentions</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {["Ghana Music Awards UK", "MUSIGA Honours", "Parazafik Festival", "Vodafone Ghana"].map((p) => (
-            <div key={p} className="flex aspect-[3/4] flex-col items-center justify-center rounded-xl border-2 border-dashed border-primary/30 bg-card p-4 text-center">
-              <Newspaper className="h-8 w-8 text-primary" />
-              <p className="mt-3 font-display text-sm font-semibold">{p}</p>
-              <p className="mt-1 text-xs text-muted-foreground">Poster placeholder</p>
-            </div>
+          {press.map((p) => (
+            <a
+              key={p.id}
+              href={p.url || "#"}
+              target={p.url ? "_blank" : undefined}
+              rel="noreferrer"
+              className="group flex aspect-[3/4] flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-primary/30 bg-card p-4 text-center transition hover:border-primary"
+            >
+              {p.posterUrl ? (
+                <img src={p.posterUrl} alt={p.outlet} className="h-full w-full object-cover" />
+              ) : (
+                <>
+                  <Newspaper className="h-8 w-8 text-primary" />
+                  <p className="mt-3 font-display text-sm font-semibold">{p.outlet}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{p.note}</p>
+                </>
+              )}
+            </a>
           ))}
         </div>
       </section>
 
       <section className="bg-secondary text-secondary-foreground">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 py-12 sm:px-6 md:flex-row md:items-center">
-          <div>
-            <h3 className="font-display text-2xl font-bold">Press Kit</h3>
-            <p className="mt-1 text-secondary-foreground/75">Logos, bios, high-res photos and fact sheet.</p>
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+            <div>
+              <h3 className="font-display text-2xl font-bold">Press Kit</h3>
+              <p className="mt-1 text-secondary-foreground/75">{pressKitNote}</p>
+            </div>
           </div>
-          <button className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110">
-            <Download className="h-4 w-4" /> Download press kit
-          </button>
+          {pressKit.length === 0 ? (
+            <p className="mt-6 text-sm text-secondary-foreground/60">No press kit files have been uploaded yet.</p>
+          ) : (
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {pressKit.map((f) => (
+                <li key={f.id}>
+                  <a href={f.url} target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-xl border border-primary/30 bg-secondary/40 p-4 text-sm font-semibold transition hover:bg-primary hover:text-primary-foreground">
+                    <Download className="h-4 w-4" /> {f.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
     </>

@@ -5,6 +5,7 @@ import xyloImg from "@/assets/xylophone.jpg";
 import ensembleImg from "@/assets/ensemble.jpg";
 import festivalImg from "@/assets/festival.jpg";
 import heroImg from "@/assets/hero-dance.jpg";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/ensemble")({
   head: () => ({
@@ -16,17 +17,21 @@ export const Route = createFileRoute("/ensemble")({
   component: EnsemblePage,
 });
 
-const instruments = [
-  { name: "Atumpan (Talking Drums)", desc: "Twin master drums voicing proverbs and royal speech." },
-  { name: "Djembe", desc: "Goblet hand drum carrying rhythm and energy." },
-  { name: "Gyil (Xylophone)", desc: "Wooden Dagara/Lobi xylophone with calabash resonators." },
-  { name: "Kpanlogo Drum", desc: "Conical Ga drum at the heart of urban folk dance." },
-  { name: "Dawuro (Bell)", desc: "Forged iron bell that anchors the polyrhythm." },
-  { name: "Shekere", desc: "Gourd shaker wrapped in beaded netting." },
+const defaultGallery = [
+  { id: "d1", url: heroImg, alt: "Ensemble" },
+  { id: "d2", url: drumsImg, alt: "Drums" },
+  { id: "d3", url: ensembleImg, alt: "Ensemble" },
+  { id: "d4", url: xyloImg, alt: "Xylophone" },
+  { id: "d5", url: festivalImg, alt: "Festival" },
+  { id: "d6", url: heroImg, alt: "Ensemble" },
 ];
 
 export default function EnsemblePage() {
-  const gallery = [heroImg, drumsImg, ensembleImg, xyloImg, festivalImg, heroImg];
+  const instruments = useStore((d) => d.instruments);
+  const storedGallery = useStore((d) => d.gallery);
+  const members = useStore((d) => d.members);
+  const youtubeVideo = useStore((d) => d.videos.find((v) => v.platform === "youtube"));
+  const gallery = storedGallery.length > 0 ? storedGallery : defaultGallery;
   return (
     <>
       <PageHeader
@@ -40,11 +45,11 @@ export default function EnsemblePage() {
         <h2 className="font-display text-2xl font-bold">Gallery</h2>
         <p className="mt-1 text-sm text-muted-foreground">A glimpse of the ensemble in motion.</p>
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
-          {gallery.map((src, i) => (
-            <div key={i} className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted">
+          {gallery.map((g, i) => (
+            <div key={g.id} className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted">
               <img
-                src={src}
-                alt={`Ensemble photo ${i + 1}`}
+                src={g.url}
+                alt={g.alt || `Ensemble photo ${i + 1}`}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
@@ -61,13 +66,15 @@ export default function EnsemblePage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Watch</p>
             <h2 className="mt-2 font-display text-2xl font-bold">YouTube playlist</h2>
             <div className="mt-4 aspect-video overflow-hidden rounded-xl border border-primary/20">
-              <iframe
-                title="Asahene Foundation playlist"
-                className="h-full w-full"
-                src="https://www.youtube.com/embed/videoseries?list=PLJAPanOB1rkGzTeBMRBvmVseDqujYJFP1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {youtubeVideo ? (
+                <iframe
+                  title={youtubeVideo.title}
+                  className="h-full w-full"
+                  src={youtubeVideo.embedUrl}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : <div className="grid h-full w-full place-items-center text-sm text-secondary-foreground/60">No video set yet.</div>}
             </div>
           </div>
           <div>
@@ -95,13 +102,33 @@ export default function EnsemblePage() {
         <p className="mt-1 text-sm text-muted-foreground">The voices that carry our story.</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {instruments.map((i) => (
-            <div key={i.name} className="rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg">
+            <div key={i.id} className="rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg">
               <h3 className="font-display text-lg font-bold text-foreground">{i.name}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{i.desc}</p>
             </div>
           ))}
         </div>
       </section>
+
+      {members.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+          <h2 className="font-display text-2xl font-bold">Meet the Ensemble</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {members.map((m) => (
+              <div key={m.id} className="flex gap-4 rounded-2xl border border-border bg-card p-5">
+                {m.photo
+                  ? <img src={m.photo} alt={m.name} className="h-16 w-16 shrink-0 rounded-full object-cover" />
+                  : <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-secondary text-primary font-display text-xl font-bold">{m.name.charAt(0)}</div>}
+                <div>
+                  <h3 className="font-display font-bold">{m.name}</h3>
+                  <p className="text-xs text-primary">{m.role}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{m.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }

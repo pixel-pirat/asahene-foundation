@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { CalendarDays, Crown, MapPin } from "lucide-react";
+import { useStore, addSubmission } from "@/lib/store";
 
 export const Route = createFileRoute("/ghana-day")({
   head: () => ({
@@ -14,20 +15,23 @@ export const Route = createFileRoute("/ghana-day")({
 });
 
 function GhanaDayPage() {
+  const event = useStore((d) => d.settings.event);
+  const lineup = useStore((d) => d.lineup);
   const [submitted, setSubmitted] = useState(false);
+  const date = new Date(event.dateISO);
   return (
     <>
       <PageHeader
         eyebrow="Featured Event"
-        title="Ghana Day 2025 — South Australia"
-        subtitle="Easter Monday, 21 April 2025. A day of traditional music, dance, food and the appointment of our Traditional Ruler of the Year."
+        title={event.name}
+        subtitle={event.description}
       />
 
       <section className="mx-auto grid max-w-7xl gap-6 px-4 py-14 sm:px-6 md:grid-cols-3">
         {[
-          { icon: CalendarDays, k: "Date", v: "Mon, 21 April 2025" },
-          { icon: MapPin, k: "Location", v: "South Australia" },
-          { icon: Crown, k: "Highlight", v: "Traditional Ruler of the Year" },
+          { icon: CalendarDays, k: "Date", v: date.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) },
+          { icon: MapPin, k: "Location", v: event.location },
+          { icon: Crown, k: "Highlight", v: event.highlight },
         ].map((c) => (
           <div key={c.k} className="rounded-2xl border border-border bg-card p-6">
             <c.icon className="h-7 w-7 text-primary" />
@@ -57,11 +61,11 @@ function GhanaDayPage() {
         <h2 className="font-display text-2xl font-bold">Program Lineup</h2>
         <p className="mt-1 text-sm text-muted-foreground">To be announced.</p>
         <div className="mt-6 space-y-3">
-          {["Opening Procession & Libation", "Traditional Dance Showcase", "Master Drumming Performance", "Appointment of Traditional Ruler", "Community Feast & Music"].map((p, i) => (
-            <div key={p} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4">
+          {lineup.map((p, i) => (
+            <div key={p.id} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4">
               <span className="grid h-9 w-9 place-items-center rounded-full bg-primary/10 font-display font-bold text-primary">{i + 1}</span>
-              <span className="font-medium">{p}</span>
-              <span className="ml-auto text-xs text-muted-foreground">TBA</span>
+              <span className="font-medium">{p.label}</span>
+              <span className="ml-auto text-xs text-muted-foreground">{p.note}</span>
             </div>
           ))}
         </div>
@@ -79,7 +83,14 @@ function GhanaDayPage() {
               </div>
             ) : (
               <form
-                onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.currentTarget);
+                  const data: Record<string, string> = {};
+                  fd.forEach((v, k) => (data[k] = String(v)));
+                  addSubmission("registration", data);
+                  setSubmitted(true);
+                }}
                 className="mt-6 grid gap-4 sm:grid-cols-2"
               >
                 <Field label="Full name" name="name" required />

@@ -1,21 +1,7 @@
-const countries = [
-  { name: "Ghana", cx: 49, cy: 56, home: true },
-  { name: "Togo", cx: 50, cy: 56 },
-  { name: "Benin", cx: 51, cy: 56 },
-  { name: "South Africa", cx: 55, cy: 80 },
-  { name: "Bulgaria", cx: 55, cy: 36 },
-  { name: "Turkey", cx: 59, cy: 39 },
-  { name: "Greece", cx: 54, cy: 38 },
-  { name: "Finland", cx: 55, cy: 22 },
-  { name: "Georgia", cx: 62, cy: 37 },
-  { name: "Germany", cx: 51, cy: 33 },
-  { name: "USA", cx: 22, cy: 40 },
-  { name: "Canada", cx: 22, cy: 28 },
-  { name: "Brazil", cx: 33, cy: 70 },
-  { name: "Chile", cx: 30, cy: 80 },
-];
+import { useStore } from "@/lib/store";
 
 export function WorldMap() {
+  const countries = useStore((d) => d.countries);
   return (
     <div className="relative w-full overflow-hidden rounded-2xl border border-border bg-secondary p-6 shadow-inner">
       <div className="relative w-full" style={{ aspectRatio: "2 / 1" }}>

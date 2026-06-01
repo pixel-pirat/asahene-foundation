@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, Award, Globe2, Heart, Music2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import heroImg from "@/assets/hero-dance.jpg";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,14 +29,17 @@ function useCountdown(target: Date) {
 }
 
 function Index() {
-  const { days, hours, minutes, seconds } = useCountdown(new Date("2025-04-21T00:00:00+09:30"));
+  const settings = useStore((d) => d.settings);
+  const { hero, event, mission } = settings;
+  const { days, hours, minutes, seconds } = useCountdown(new Date(event.dateISO));
+  const heroSrc = hero.heroImage || heroImg;
 
   return (
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
         <img
-          src={heroImg}
+          src={heroSrc}
           alt="Asahene Foundation dancers performing in kente"
           width={1920}
           height={1280}
@@ -45,14 +49,14 @@ function Index() {
         <div className="relative mx-auto flex max-w-7xl flex-col items-start px-4 py-28 sm:px-6 sm:py-36 lg:py-44">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-secondary/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-            Est. 2006 • Renamed 2023
+            {hero.eyebrow}
           </span>
           <h1 className="max-w-3xl font-display text-4xl font-bold leading-[1.05] text-secondary-foreground sm:text-5xl lg:text-7xl">
-            Preserving Ghanaian Culture Through{" "}
-            <span className="text-gradient-gold">Music & Dance</span>
+            {hero.titleA}{" "}
+            <span className="text-gradient-gold">{hero.titleB}</span>
           </h1>
           <p className="mt-6 max-w-2xl text-base text-secondary-foreground/85 sm:text-lg">
-            Asahene Foundation — Honoring Our Roots, Building Our Future.
+            {hero.subtitle}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/ensemble" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition hover:brightness-110">
@@ -74,9 +78,9 @@ function Index() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Countdown</p>
                 <h2 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
-                  Ghana Day 2025 — South Australia
+                  {event.name}
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground">Easter Monday, 21 April 2025</p>
+                <p className="mt-1 text-sm text-muted-foreground">{new Date(event.dateISO).toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</p>
               </div>
               <div className="grid w-full grid-cols-4 gap-2 sm:w-auto sm:gap-3">
                 {[
@@ -102,30 +106,21 @@ function Index() {
       <section className="bg-background">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Our Mission</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">{mission.eyebrow}</p>
             <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">
-              Honoring tradition. Touching lives.
+              {mission.heading}
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-              Asahene Foundation exists to preserve Ghanaian culture at home and
-              abroad — through authentic music, dance and theatre arts — while
-              touching lives and supporting the less privileged in our communities.
+              {mission.body1}
             </p>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              Founded in 2006 as the Amamere Folks Music and Dance Ensemble and
-              renamed in 2023 in honor of our mentor, the late Evans Badu, we
-              carry our heritage forward with pride.
+              {mission.body2}
             </p>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {[
-              { icon: Music2, k: "2006", v: "Founded as Amamere" },
-              { icon: Globe2, k: "15+", v: "Countries performed" },
-              { icon: Award, k: "6+", v: "Major awards won" },
-              { icon: Heart, k: "100s", v: "Lives touched yearly" },
-            ].map((s) => (
+            {mission.stats.map((s) => (
               <div key={s.v} className="rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:shadow-lg">
-                <s.icon className="h-6 w-6 text-primary" />
+                <div className="h-1 w-8 rounded-full bg-primary" />
                 <div className="mt-4 font-display text-3xl font-bold">{s.k}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{s.v}</div>
               </div>

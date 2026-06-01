@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { Facebook, Mail, Phone, Youtube } from "lucide-react";
+import { useStore, addSubmission } from "@/lib/store";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -14,6 +15,8 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
+  const contact = useStore((d) => d.settings.contact);
+  const director = useStore((d) => d.settings.about);
   const [tab, setTab] = useState<"general" | "booking">("general");
   const [done, setDone] = useState(false);
 
@@ -29,20 +32,20 @@ function ContactPage() {
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-card p-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary">Director</p>
-            <h3 className="mt-1 font-display text-xl font-bold">Lawrence Quaye</h3>
-            <p className="text-sm text-muted-foreground">Dance Instructor • Knutsford University College</p>
+            <h3 className="mt-1 font-display text-xl font-bold">{director.directorName}</h3>
+            <p className="text-sm text-muted-foreground">{director.directorRole}</p>
             <div className="mt-4 space-y-2 text-sm">
-              <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> director@asahenefoundation.org</p>
-              <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> +233 (0) 00 000 0000</p>
+              <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> {contact.email}</p>
+              <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> {contact.phone}</p>
             </div>
           </div>
           <div className="rounded-2xl border border-border bg-card p-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary">Follow</p>
             <div className="mt-3 flex gap-3">
-              <a href="https://www.facebook.com/Anamereconcepts" target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-primary hover:bg-primary hover:text-primary-foreground transition">
+              <a href={contact.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-primary hover:bg-primary hover:text-primary-foreground transition">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a href="https://www.youtube.com/playlist?list=PLJAPanOB1rkGzTeBMRBvmVseDqujYJFP1" target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-primary hover:bg-primary hover:text-primary-foreground transition">
+              <a href={contact.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-primary hover:bg-primary hover:text-primary-foreground transition">
                 <Youtube className="h-4 w-4" />
               </a>
             </div>
@@ -65,7 +68,17 @@ function ContactPage() {
               <p className="mt-1 text-sm text-muted-foreground">We'll respond within 2–3 business days.</p>
             </div>
           ) : (
-            <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} className="grid gap-4 sm:grid-cols-2">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const data: Record<string, string> = {};
+                fd.forEach((v, k) => (data[k] = String(v)));
+                addSubmission(tab === "booking" ? "booking" : "contact", data);
+                setDone(true);
+              }}
+              className="grid gap-4 sm:grid-cols-2"
+            >
               <Input label="Full name" name="name" required />
               <Input label="Email" name="email" type="email" required />
               {tab === "booking" ? (

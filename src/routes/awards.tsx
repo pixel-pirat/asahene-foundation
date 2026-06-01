@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { WorldMap } from "@/components/WorldMap";
 import { Trophy } from "lucide-react";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/awards")({
   head: () => ({
@@ -13,18 +14,9 @@ export const Route = createFileRoute("/awards")({
   component: AwardsPage,
 });
 
-const awards = [
-  { year: "2019", title: "Ghana Traditional Performing Act — Winner", body: "Ghana Music Awards UK" },
-  { year: "2018", title: "Best Traditional Music Performing Acts — Nominee", body: "Ghana Music Awards UK" },
-  { year: "2017", title: "Best Traditional Music Group — Winner", body: "Vodafone / Ghana Music Awards" },
-  { year: "2017", title: "Best Performing Group", body: "Parazafik Festival — Bulgaria" },
-  { year: "2017", title: "Best Entertaining Group", body: "Ankara Inter-tik Festival — Turkey" },
-  { year: "2015", title: "Ghana Music Honour — Best Traditional Dance Group", body: "MUSIGA Ghana" },
-];
-
-const countries = ["Ghana","Togo","Bulgaria","Turkey","USA","Canada","Greece","Finland","Georgia","Germany","Brazil","Chile","South Africa","Benin"];
-
 function AwardsPage() {
+  const awards = useStore((d) => [...d.awards].sort((a, b) => Number(b.year) - Number(a.year)));
+  const countries = useStore((d) => d.countries);
   return (
     <>
       <PageHeader
@@ -37,7 +29,7 @@ function AwardsPage() {
         <h2 className="font-display text-2xl font-bold">Timeline</h2>
         <div className="mt-8 relative border-l-2 border-primary/30 pl-8">
           {awards.map((a) => (
-            <div key={a.year + a.title} className="relative mb-8 last:mb-0">
+            <div key={a.id} className="relative mb-8 last:mb-0">
               <span className="absolute -left-[42px] grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground shadow">
                 <Trophy className="h-4 w-4" />
               </span>
@@ -64,8 +56,8 @@ function AwardsPage() {
               <h3 className="font-display text-lg font-bold">Where we've performed</h3>
               <ul className="mt-4 grid grid-cols-2 gap-y-2 text-sm text-secondary-foreground/85">
                 {countries.map((c) => (
-                  <li key={c} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {c}
+                  <li key={c.id} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {c.name}
                   </li>
                 ))}
               </ul>

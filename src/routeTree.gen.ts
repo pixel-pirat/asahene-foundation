@@ -22,6 +22,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
+import { Route as AdminEnsembleRouteImport } from './routes/admin.ensemble'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -88,6 +89,11 @@ const AdminEventsRoute = AdminEventsRouteImport.update({
   path: '/events',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminEnsembleRoute = AdminEnsembleRouteImport.update({
+  id: '/ensemble',
+  path: '/ensemble',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/ghana-day': typeof GhanaDayRoute
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
+  '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/ghana-day': typeof GhanaDayRoute
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
+  '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/ghana-day': typeof GhanaDayRoute
   '/media': typeof MediaRoute
   '/support': typeof SupportRoute
+  '/admin/ensemble': typeof AdminEnsembleRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/ghana-day'
     | '/media'
     | '/support'
+    | '/admin/ensemble'
     | '/admin/events'
     | '/admin/login'
     | '/admin/settings'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/ghana-day'
     | '/media'
     | '/support'
+    | '/admin/ensemble'
     | '/admin/events'
     | '/admin/login'
     | '/admin/settings'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/ghana-day'
     | '/media'
     | '/support'
+    | '/admin/ensemble'
     | '/admin/events'
     | '/admin/login'
     | '/admin/settings'
@@ -286,10 +298,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ensemble': {
+      id: '/admin/ensemble'
+      path: '/ensemble'
+      fullPath: '/admin/ensemble'
+      preLoaderRoute: typeof AdminEnsembleRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminEnsembleRoute: typeof AdminEnsembleRoute
   AdminEventsRoute: typeof AdminEventsRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -297,6 +317,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminEnsembleRoute: AdminEnsembleRoute,
   AdminEventsRoute: AdminEventsRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminSettingsRoute: AdminSettingsRoute,

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Save, KeyRound } from "lucide-react";
 import { AdminShell, Card, Field, inputCls, Btn } from "@/components/admin/AdminShell";
-import { useStore, updateSettings, changeCredentials, getData } from "@/lib/store";
+import { useStore, updateSettings } from "@/lib/store";
 
 export const Route = createFileRoute("/admin/settings")({
   head: () => ({ meta: [{ title: "Site Settings — Admin" }] }),
@@ -140,33 +140,21 @@ function SettingsPage() {
       </div>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
-        <Save className="mr-1 inline h-3 w-3" /> All changes are saved automatically to your browser storage.
+        <Save className="mr-1 inline h-3 w-3" /> All changes are saved automatically to your Postgres database.
       </p>
     </AdminShell>
   );
 }
 
 function CredentialsForm() {
-  const current = getData().settings.admin;
-  const [email, setEmail] = useState(current.email);
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
-
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (password.length < 6) { setMsg("Password must be at least 6 characters."); return; }
-        changeCredentials(email, password);
-        setPassword("");
-        setMsg("Credentials updated.");
-      }}
-      className="mt-4 space-y-4"
-    >
-      <Field label="Admin email"><input className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} type="email" required /></Field>
-      <Field label="New password" hint="Leave field unchanged to keep current."><input className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Enter new password" /></Field>
-      {msg && <p className="rounded-md bg-primary/10 px-3 py-2 text-xs text-primary">{msg}</p>}
-      <Btn type="submit"><Save className="h-4 w-4" /> Update credentials</Btn>
-    </form>
+    <div className="mt-4 rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+      <p className="mb-2 font-medium text-foreground">Credentials are managed server-side.</p>
+      <p>
+        Update the <code className="font-mono text-xs">ADMIN_EMAIL</code> and{" "}
+        <code className="font-mono text-xs">ADMIN_PASSWORD</code> values in your project Secrets to change
+        the admin login. Changes take effect immediately for new sign-ins.
+      </p>
+    </div>
   );
 }

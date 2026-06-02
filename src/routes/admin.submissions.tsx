@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AdminShell, Card, Btn } from "@/components/admin/AdminShell";
-import { useStore, setData, type SubmissionKind, type Submission } from "@/lib/store";
+import { useStore, markSubmissionRead, removeSubmission, type SubmissionKind, type Submission } from "@/lib/store";
 import { Mail, Trash2, Check } from "lucide-react";
 
 export const Route = createFileRoute("/admin/submissions")({
@@ -26,11 +26,9 @@ function SubmissionsAdmin() {
   const filtered = filter === "all" ? all : all.filter((s) => s.kind === filter);
   const current = filtered.find((s) => s.id === selected) ?? filtered[0];
 
-  const markRead = (id: string) =>
-    setData((d) => ({ ...d, submissions: d.submissions.map((s) => s.id === id ? { ...s, read: true } : s) }));
-  const remove = (id: string) =>
-    setData((d) => ({ ...d, submissions: d.submissions.filter((s) => s.id !== id) }));
-  const clearAll = () => { if (confirm("Delete ALL submissions?")) setData((d) => ({ ...d, submissions: [] })); };
+  const markRead = (id: string) => markSubmissionRead(id, true);
+  const remove = (id: string) => removeSubmission(id);
+  const clearAll = () => { if (confirm("Delete ALL submissions?")) all.forEach((s) => removeSubmission(s.id)); };
 
   return (
     <AdminShell title="Submissions Inbox">

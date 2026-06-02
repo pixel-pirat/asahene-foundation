@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { Save, KeyRound } from "lucide-react";
 import { AdminShell, Card, Field, inputCls, Btn } from "@/components/admin/AdminShell";
 import { useStore, updateSettings } from "@/lib/store";

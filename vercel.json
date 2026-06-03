@@ -1,10 +1,5 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".output/public",
-  "framework": null,
-  "functions": {
-    "**": {
-      "maxDuration": 30
-    }
-  }
+  "framework": null
 }

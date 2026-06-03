@@ -28,8 +28,8 @@ dist-ssr
 # Vercel
 .vercel
 
-# Large video files — host on CDN, don't commit to git
-public/videos/*.mp4
+# Large video files — tracked via Git LFS instead
+# public/videos/*.mp4  (LFS handles these now)
 public/videos/*.mov
 public/videos/*.webm
 

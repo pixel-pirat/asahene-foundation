@@ -10,6 +10,8 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import faviconIco from "../assets/Group 182.ico?url";
+import faviconPng from "../assets/Group 182.png?url";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BackToTop } from "@/components/BackToTop";
@@ -85,10 +87,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: faviconIco, type: "image/x-icon" },
+      { rel: "icon", href: faviconPng, type: "image/png", sizes: "any" },
+      { rel: "apple-touch-icon", href: faviconPng },
     ],
   }),
   shellComponent: RootShell,

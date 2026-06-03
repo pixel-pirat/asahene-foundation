@@ -8,10 +8,22 @@ export function getPool(): Pool {
   if (!connectionString) {
     throw new Error("DATABASE_URL is not configured");
   }
+
+  // Strip the sslmode / channel_binding query params from the URL so pg's
+  // connection-string parser doesn't emit a deprecation warning about SSL
+  // modes. We enforce SSL explicitly via the pool's ssl option instead.
+  const url = new URL(connectionString);
+  url.searchParams.delete("sslmode");
+  url.searchParams.delete("channel_binding");
+  const cleanUrl = url.toString();
+
   pool = new Pool({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
+    connectionString: cleanUrl,
+    // Neon requires TLS — rejectUnauthorized:true verifies the server certificate
+    ssl: { rejectUnauthorized: true },
     max: 5,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000,
   });
   return pool;
 }

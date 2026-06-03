@@ -28,6 +28,10 @@ dist-ssr
 # Vercel
 .vercel
 
+# Raw source media folders (original uncompressed files — not for repo)
+asahene photos/
+asahene videos/
+
 # Large video files — tracked via Git LFS instead
 # public/videos/*.mp4  (LFS handles these now)
 public/videos/*.mov

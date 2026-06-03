@@ -1,7 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Save, KeyRound } from "lucide-react";
 import { AdminShell, Card, Field, inputCls, Btn } from "@/components/admin/AdminShell";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { useStore, updateSettings } from "@/lib/store";
+import { uploadFileFn } from "@/lib/upload.functions";
+
+async function uploadFile(file: File): Promise<string> {
+  const base64 = await toBase64(file);
+  const res = await uploadFileFn({ data: { filename: `asahene/${Date.now()}-${file.name.replace(/\s+/g, "-")}`, contentType: file.type || "application/octet-stream", base64 } });
+  return res.url;
+}
+function toBase64(file: File): Promise<string> {
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res((r.result as string).split(",")[1]); r.onerror = rej; r.readAsDataURL(file); });
+}
 
 export const Route = createFileRoute("/admin/settings")({
   head: () => ({ meta: [{ title: "Site Settings — Admin" }] }),
@@ -22,7 +33,23 @@ function SettingsPage() {
             <Field label="Title — Part A"><input className={inputCls} value={s.hero.titleA} onChange={(e) => updateSettings({ hero: { ...s.hero, titleA: e.target.value } })} /></Field>
             <Field label="Title — Highlighted Part B"><input className={inputCls} value={s.hero.titleB} onChange={(e) => updateSettings({ hero: { ...s.hero, titleB: e.target.value } })} /></Field>
             <Field label="Subtitle"><textarea rows={2} className={inputCls} value={s.hero.subtitle} onChange={(e) => updateSettings({ hero: { ...s.hero, subtitle: e.target.value } })} /></Field>
-            <Field label="Hero image URL" hint="Optional. Leave blank to use the default."><input className={inputCls} value={s.hero.heroImage} onChange={(e) => updateSettings({ hero: { ...s.hero, heroImage: e.target.value } })} /></Field>
+            <Field label="Hero image" hint="Upload replaces default. Leave blank to restore default.">
+              <FileUpload
+                label="Upload hero image"
+                accept="image/*"
+                onFile={uploadFile}
+                onUploaded={([u]) => updateSettings({ hero: { ...s.hero, heroImage: u } })}
+              />
+              <input
+                className={`${inputCls} mt-2`}
+                value={s.hero.heroImage}
+                onChange={(e) => updateSettings({ hero: { ...s.hero, heroImage: e.target.value } })}
+                placeholder="or paste URL…"
+              />
+              {s.hero.heroImage && (
+                <img src={s.hero.heroImage} alt="Hero preview" className="mt-2 h-24 w-full rounded object-cover border border-border" />
+              )}
+            </Field>
           </div>
         </Card>
 
@@ -70,6 +97,17 @@ function SettingsPage() {
         <Card>
           <h2 className="font-display text-lg font-bold">About Page</h2>
           <div className="mt-4 space-y-4">
+            <Field label="Director Photo">
+              <FileUpload
+                label="Upload director photo"
+                accept="image/*"
+                onFile={uploadFile}
+                onUploaded={([u]) => updateSettings({ about: { ...s.about, directorPhoto: u } })}
+              />
+              {(s.about as any).directorPhoto && (
+                <img src={(s.about as any).directorPhoto} alt="Director" className="mt-2 h-20 w-20 rounded-full object-cover border border-border" />
+              )}
+            </Field>
             <Field label="Director Name"><input className={inputCls} value={s.about.directorName} onChange={(e) => updateSettings({ about: { ...s.about, directorName: e.target.value } })} /></Field>
             <Field label="Director Role"><input className={inputCls} value={s.about.directorRole} onChange={(e) => updateSettings({ about: { ...s.about, directorRole: e.target.value } })} /></Field>
             <Field label="Director Bio"><textarea rows={4} className={inputCls} value={s.about.directorBio} onChange={(e) => updateSettings({ about: { ...s.about, directorBio: e.target.value } })} /></Field>

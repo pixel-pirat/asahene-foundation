@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import logoSrc from "@/assets/Group 182.png";
 
 const links = [
   { to: "/", label: "Home" },
@@ -21,15 +22,20 @@ export function Navbar() {
       <div className="kente-stripe h-1.5 w-full" />
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-primary font-display text-lg font-bold ring-2 ring-primary/40">
-            A
-          </span>
+          <img
+            src={logoSrc}
+            alt="Asahene Foundation logo"
+            width={40}
+            height={40}
+            className="h-10 w-10 object-contain"
+            style={{ mixBlendMode: "multiply" }}
+          />
           <span className="flex flex-col leading-tight">
             <span className="font-display text-base font-bold text-foreground sm:text-lg">
               Asahene Foundation
             </span>
             <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              Honoring Our Roots
+              A Trend in Our Culture
             </span>
           </span>
         </Link>

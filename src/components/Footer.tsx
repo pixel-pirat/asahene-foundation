@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Youtube, Mail, Lock } from "lucide-react";
 import { useStore } from "@/lib/store";
+import logoSrc from "@/assets/Group 182.png";
 
 export function Footer() {
   const contact = useStore((d) => d.settings.contact);
@@ -9,9 +10,18 @@ export function Footer() {
       <div className="kente-stripe h-1.5 w-full" />
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-2">
-          <h3 className="font-display text-2xl font-bold text-primary">
-            Asahene Foundation
-          </h3>
+          <div className="flex items-center gap-3">
+            <img
+              src={logoSrc}
+              alt="Asahene Foundation logo"
+              width={44}
+              height={44}
+              className="h-11 w-11 object-contain brightness-200"
+            />
+            <h3 className="font-display text-2xl font-bold text-primary">
+              Asahene Foundation
+            </h3>
+          </div>
           <p className="mt-3 max-w-md text-sm text-secondary-foreground/75">
             Preserving and promoting Ghanaian theatre arts, music, and dance at
             home and abroad. Formerly Amamere Folks Music and Dance Ensemble.

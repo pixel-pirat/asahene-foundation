@@ -5,6 +5,7 @@ import {
   Film, Newspaper, Download, Globe, Inbox, LogOut, Menu, X, ExternalLink,
 } from "lucide-react";
 import { useAuth, logout, useStore } from "@/lib/store";
+import logoSrc from "@/assets/logo.png";
 
 const nav: { to: string; exact?: boolean; label: string; icon: typeof LayoutDashboard }[] = [
   { to: "/admin", exact: true, label: "Dashboard", icon: LayoutDashboard },
@@ -53,7 +54,13 @@ export function AdminShell({ children, title }: { children: React.ReactNode; tit
         >
           <div className="hidden lg:block p-5">
             <Link to="/admin" className="flex items-center gap-2.5">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground font-display text-lg font-bold">A</span>
+              <img
+                src={logoSrc}
+                alt="Asahene Foundation logo"
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain brightness-200"
+              />
               <span className="flex flex-col leading-tight">
                 <span className="font-display text-base font-bold">Asahene</span>
                 <span className="text-[10px] uppercase tracking-[0.18em] text-secondary-foreground/60">Admin Console</span>

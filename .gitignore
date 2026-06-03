@@ -28,6 +28,11 @@ dist-ssr
 # Vercel
 .vercel
 
+# Large video files — host on CDN, don't commit to git
+public/videos/*.mp4
+public/videos/*.mov
+public/videos/*.webm
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

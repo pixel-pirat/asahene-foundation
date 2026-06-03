@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/PageHeader";
 import { Download, Newspaper } from "lucide-react";
 import { useStore } from "@/lib/store";
+import perf3 from "@/assets/photos/performance-3.jpg";
+import event1 from "@/assets/photos/event-1.jpg";
 
 export const Route = createFileRoute("/media")({
   head: () => ({
@@ -28,23 +30,31 @@ function MediaPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <h2 className="font-display text-2xl font-bold">Video Gallery</h2>
-        {videos.length === 0 ? (
-          <p className="mt-6 rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">No videos added yet.</p>
-        ) : (
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            {videos.map((v) => (
-              <div key={v.id} className="aspect-video overflow-hidden rounded-xl border border-border">
-                <iframe
-                  title={v.title}
-                  className="h-full w-full"
-                  src={v.embedUrl}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ))}
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          {/* Local performance videos */}
+          <div className="overflow-hidden rounded-xl border border-border">
+            <video controls playsInline poster={perf3} className="w-full aspect-video bg-muted">
+              <source src="/videos/performance-1.mp4" type="video/mp4" />
+            </video>
           </div>
-        )}
+          <div className="overflow-hidden rounded-xl border border-border">
+            <video controls playsInline poster={event1} className="w-full aspect-video bg-muted">
+              <source src="/videos/performance-2.mp4" type="video/mp4" />
+            </video>
+          </div>
+          {/* YouTube / other embeds from CMS */}
+          {videos.map((v) => (
+            <div key={v.id} className="aspect-video overflow-hidden rounded-xl border border-border">
+              <iframe
+                title={v.title}
+                className="h-full w-full"
+                src={v.embedUrl}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
